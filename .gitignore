@@ -1,0 +1,51 @@
+# Build folders
+/build/
+/cmake-build-debug/
+/cmake-build-release/
+
+# CMake generated
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+compile_commands.json
+
+# vcpkg (если лежит рядом)
+vcpkg_installed/
+vcpkg/
+
+# Binaries
+*.exe
+*.out
+*.app
+*.o
+*.a
+*.so
+*.dll
+
+# Logs
+*.log
+
+# IDE
+.idea/
+.vscode/
+
+# Neovim swap
+*.swp
+*.swo
+
+# OS
+.DS_Store
+
+# clangd
+.cache/
+
+# IDE
+.idea/
+
+# CMake compile commands
+compile_commands.json
+
+# ImGui runtime config
+imgui.ini
+
