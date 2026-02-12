@@ -1,6 +1,7 @@
 #pragma once
 #include "Body.h"
-#include "../Config.h"
+#include "Config.h"
+#include <vector>
 
 class Simulation {
 public:
@@ -9,8 +10,11 @@ public:
   void Reset(const Config &config);
   void Update(float dt, const Config &config);
 
-  Body &GetBody1() { return body1; }
-  Body &GetBody2() { return body2; }
+  std::vector<Body> &GetBodies() { return bodies; }
+  const std::vector<Body> &GetBodies() const { return bodies; }
+
+  void AddBody(const Body &body);
+  void ClearBodies();
 
   void SetWorldBounds(float width, float height);
 
@@ -18,15 +22,14 @@ public:
   glm::vec2 GetTotalMomentum() const;
 
 private:
-  void ResolveCollision(const Config &config);
   void HandleWallCollision(Body &body, const Config &config);
-  void PositionalCorrection();
+  std::vector<Body> bodies;
 
-  float worldLeft = -1.0f;
-  float worldRight = 1.0f;
-  float worldTop = 1.0f;
-  float worldBottom = -1.0f;
+  void ResolveCollision(Body &a, Body &b, const Config &config);
+  void PositionalCorrection(Body &a, Body &b);
 
-  Body body1;
-  Body body2;
+  float worldLeft;
+  float worldRight;
+  float worldTop;
+  float worldBottom;
 };

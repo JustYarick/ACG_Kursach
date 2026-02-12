@@ -1,4 +1,5 @@
 #include "UI.h"
+#include <string>
 #include "Config.h"
 
 #include <imgui.h>
@@ -27,23 +28,39 @@ void UI::Render(Config &config, Simulation &sim) {
   ImGui::Begin("Simulation Settings");
 
   ImGui::SeparatorText("Physics");
-
   ImGui::SliderFloat("Restitution (e)", &config.restitution, 0.0f, 1.0f);
 
-  ImGui::SliderFloat("Mass 1", &config.mass1, 0.1f, 10.0f);
-  ImGui::SliderFloat("Mass 2", &config.mass2, 0.1f, 10.0f);
+  ImGui::SeparatorText("Bodies");
 
-  ImGui::SeparatorText("Initial Conditions");
+  auto &bodies = sim.GetBodies();
 
-  ImGui::SliderFloat2("Velocity 1", glm::value_ptr(config.velocity1), -5.0f,
-                      5.0f);
-  ImGui::SliderFloat2("Velocity 2", glm::value_ptr(config.velocity2), -5.0f,
-                      5.0f);
+  for (size_t i = 0; i < bodies.size(); ++i) {
+    auto &body = bodies[i];
 
-  ImGui::SliderFloat2("Position 1", glm::value_ptr(config.position1), -1.0f,
-                      1.0f);
-  ImGui::SliderFloat2("Position 2", glm::value_ptr(config.position2), -1.0f,
-                      1.0f);
+    ImGui::PushID((int)i);
+
+    std::string label = "Body " + std::to_string(i);
+    if (ImGui::TreeNode(label.c_str())) {
+      ImGui::SliderFloat("Mass", &body.mass, 0.1f, 10.0f);
+      ImGui::SliderFloat("Radius", &body.radius, 0.05f, 1.0f);
+
+      ImGui::SliderFloat2("Velocity", glm::value_ptr(body.velocity), -5.0f,
+                          5.0f);
+
+      ImGui::SliderFloat2("Position", glm::value_ptr(body.position), -1.0f,
+                          1.0f);
+
+      ImGui::ColorEdit3("Color", glm::value_ptr(body.color));
+
+      ImGui::TreePop();
+    }
+
+    ImGui::PopID();
+  }
+
+  if (ImGui::Button("Add Body")) {
+    sim.AddBody({1.0f, 0.1f, {0.0f, 0.0f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}});
+  }
 
   ImGui::SeparatorText("Simulation");
 
@@ -52,7 +69,6 @@ void UI::Render(Config &config, Simulation &sim) {
   }
 
   ImGui::SameLine();
-
   ImGui::Checkbox("Run", &config.simulationRunning);
 
   ImGui::SeparatorText("Statistics");
@@ -62,8 +78,22 @@ void UI::Render(Config &config, Simulation &sim) {
   glm::vec2 momentum = sim.GetTotalMomentum();
   ImGui::Text("Momentum: (%.3f, %.3f)", momentum.x, momentum.y);
 
-  ImGui::SeparatorText("Visual");
+  for (size_t i = 0; i < bodies.size(); ++i) {
+    const auto &body = bodies[i];
 
+    float energy =
+        0.5f * body.mass *
+        (body.velocity.x * body.velocity.x + body.velocity.y * body.velocity.y);
+
+    ImGui::Text("Body %zu | m=%.2f r=%.2f | "
+                "pos(%.2f, %.2f) | "
+                "vel(%.2f, %.2f) | "
+                "E=%.3f",
+                i, body.mass, body.radius, body.position.x, body.position.y,
+                body.velocity.x, body.velocity.y, energy);
+  }
+
+  ImGui::SeparatorText("Visual");
   ImGui::ColorEdit3("Background", config.clearColor);
 
   ImGui::End();
