@@ -1,21 +1,20 @@
 #pragma once
+#include <glm/glm.hpp>
 
 struct Config {
-  // Тип удара
-  float restitution = 1.0f; // 0..1
 
-  // Массы
+  float restitution = 1.0f;
+
   float mass1 = 1.0f;
   float mass2 = 1.0f;
 
-  // Начальные скорости
-  float velocity1 = 1.0f;
-  float velocity2 = -1.0f;
+  glm::vec2 velocity1 = {1.0f, 0.0f};
+  glm::vec2 velocity2 = {-1.0f, 0.0f};
 
-  // Режим
-  bool is3D = false;
+  glm::vec2 position1 = {-0.5f, 0.0f};
+  glm::vec2 position2 = {0.5f, 0.0f};
+
   bool simulationRunning = false;
 
-  // Визуал
   float clearColor[3] = {0.1f, 0.2f, 0.3f};
 };

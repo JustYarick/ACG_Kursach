@@ -10,6 +10,8 @@ file(GLOB_RECURSE SOURCES
 
 add_executable(ACG_Kursach ${SOURCES})
 
+target_include_directories(ACG_Kursach PRIVATE src)
+
 find_package(glad CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
