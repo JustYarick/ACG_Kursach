@@ -7,6 +7,7 @@
 #include <imgui_impl_opengl3.h>
 #include <GLFW/glfw3.h>
 #include "core/Simulation.h"
+#include "render/Renderer.h"
 #include <glm/gtc/type_ptr.hpp>
 
 void UI::Init(GLFWwindow *window) {
@@ -24,7 +25,7 @@ void UI::BeginFrame() {
   ImGui::NewFrame();
 }
 
-void UI::Render(Config &config, Simulation &sim) {
+void UI::Render(Config &config, Simulation &sim, Renderer &renderer) {
   ImGui::Begin("Simulation Settings");
 
   ImGui::SeparatorText("Physics");
@@ -59,7 +60,9 @@ void UI::Render(Config &config, Simulation &sim) {
   }
 
   if (ImGui::Button("Add Body")) {
-    sim.AddBody({1.0f, 0.1f, {0.0f, 0.0f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}});
+    Body newBody(1.0f, 0.1f, {0.0f, 0.0f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f});
+    newBody.shader = renderer.GetDefaultShader();
+    sim.AddBody(newBody);
   }
 
   ImGui::SeparatorText("Simulation");

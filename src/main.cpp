@@ -72,7 +72,7 @@ int main() {
     glfwPollEvents();
 
     ui.BeginFrame();
-    ui.Render(config, simulation);
+    ui.Render(config, simulation, renderer);
 
     if (config.simulationRunning)
       simulation.Update(dt, config);
